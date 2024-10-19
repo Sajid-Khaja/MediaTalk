@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block title %}User Search Results{% endblock %}
+
+{% block content %}
+<h1>User Search</h1>
+<form method="GET" action="{% url 'search_users' %}">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
+    <button type="submit">Search</button>
+</form>
+
+<h2>Results:</h2>
+{% if user_tweets %}
+    <ul>
+        {% for user, info in user_tweets.items %}
+            <li>
+                <strong>{{ user.username }}</strong>
+                {% if info.profile_picture %}
+                    <img src="{{ info.profile_picture }}" alt="{{ user.username }}'s profile picture" width="50" height="50">
+                {% else %}
+                    <p>No profile picture available.</p>
+                {% endif %}
+                {% if info.tweets %}
+                    <ul>
+                        {% for tweet in info.tweets %}
+                            <li>{{ tweet.text }} - {{ tweet.created_at }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No tweets found for this user.</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No users found.</p>
+{% endif %}
+{% endblock %}
